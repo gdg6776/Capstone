@@ -84,12 +84,12 @@ class ego(object):
             connectedcomponents[node] = number
             cc.append(number)
 
-            if nx.has_bridges(ego_graph):
-                hasBridge[node] = 1
-                bridgelist.append(1)
-            else:
-                hasBridge[node] = 0
-                bridgelist.append(0)
+            # if nx.has_bridges(ego_graph):
+            #     hasBridge[node] = 1
+            #     bridgelist.append(1)
+            # else:
+            #     hasBridge[node] = 0
+            #     bridgelist.append(0)
 
             # Average Shortest path lengths
             # copy = ego_graph.is_directed()
@@ -100,6 +100,6 @@ class ego(object):
 
         if self.filtervalue:
             frame = dataframe()
-            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, bridgelist, corenumberlist,self.graphname.nodes())
+            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist,self.graphname.nodes())
         else:
-            return connectedcomponents, triangles, coefficient, egonetSize, corenumber, hasBridge
+            return connectedcomponents, triangles, coefficient, egonetSize, corenumber

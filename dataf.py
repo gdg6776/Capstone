@@ -6,10 +6,10 @@ class dataframe(object):
     def __init__(self):
         pass
 
-    def createDataFrame(self, cc, tri, coeff, egoSize, hasrisk, corenumberlist, bridgelist ,nodesList):
-        attributes = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'riskfactor', 'corenumber', 'bridgelist']
+    def createDataFrame(self, cc, tri, coeff, egoSize, hasrisk, corenumberlist,nodesList):
+        attributes = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'riskfactor', 'corenumber']
 
-        new_data = np.array([cc, tri, coeff, egoSize, hasrisk, corenumberlist, bridgelist], dtype=float).transpose()
+        new_data = np.array([cc, tri, coeff, egoSize, hasrisk, corenumberlist], dtype=float).transpose()
 
         df = pd.DataFrame(data=new_data, index=[i for i in nodesList],
                           columns=attributes)

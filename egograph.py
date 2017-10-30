@@ -84,20 +84,6 @@ class ego(object):
             connectedcomponents[node] = number
             cc.append(number)
 
-            # if nx.has_bridges(ego_graph):
-            #     hasBridge[node] = 1
-            #     bridgelist.append(1)
-            # else:
-            #     hasBridge[node] = 0
-            #     bridgelist.append(0)
-
-            # Average Shortest path lengths
-            # copy = ego_graph.is_directed()
-            # sub_graphs = nx.connected_component_subgraphs(ego_graph)  # adding the count for that node in dictionary
-            # path = nx.all_pairs_shortest_path_length(ego_graph)
-            # distance = sum([q.values() for q in path.values()], [])
-            # pathLength[node] = float(sum(distance)) / len(distance)
-
         if self.filtervalue:
             frame = dataframe()
             return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist,self.graphname.nodes())

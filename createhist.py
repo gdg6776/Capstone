@@ -10,23 +10,35 @@ class createhistogram(object):
     def __init__(self):
         pass
 
-    def createGraph(self, dict_1, x, y, title):
+    def createGraph(self, dict_1, x, y, title, range_value):
         counter = 0
         list_keys = []
         newDict = {}
         new_list = []
+        binning = []
+        # print title
+        # print dict_1.values()
+        # print " "
 
-        if title == 'Histogram for Coefficients ATRISK' or title == 'Histogram for Coefficients NOTATRISK':
-            (n, bins, patches) = plt.hist(dict_1.values(),bins=range(30) ,normed=True,
-                                          cumulative=True)
-            plt.xlabel(x)
-            plt.ylabel(y)
-            plt.title(title)
-        else:
-            (counts, bins, patches) = plt.hist(dict_1.values(),bins= range(20),normed=True,
-                                          cumulative=True)
 
-            plt.xlabel(x)
-            plt.ylabel(y)
-            plt.title(title)
+        myset = set(dict_1.values())
+        binning = list(myset)
+        print binning
+        print ""
+
+
+        # if title == 'Histogram for Coefficients ATRISK' or title == 'Histogram for Coefficients NOTATRISK':
+        #     (counts, bins, patches) = plt.hist(dict_1.values(),bins=range(range_value) ,normed=True,
+        #                                   cumulative=True)
+        #
+        #     plt.xlabel(x)
+        #     plt.ylabel(y)
+        #     plt.title(title)
+        # else:
+        (counts, bins, patches) = plt.hist(dict_1.values(),bins= range(range_value),normed=True,
+                                      cumulative=True)
+
+        plt.xlabel(x)
+        plt.ylabel(y)
+        plt.title(title)
         plt.show(title)

@@ -78,12 +78,12 @@ def main():
     if isinstance(mgp.buildegonet(), tuple):
         (connectedcomponents, triangles, coefficient, egonetSize, corenumber) = mgp.buildegonet()
         hist = createhistogram()
-        hist.createGraph(connectedcomponents, "Value", "Frequency",
-                         "Histogram for Connected Components {0}".format(name.upper()))
-        hist.createGraph(triangles, "Value", "Frequency", "Histogram for Triangles {0}".format(name.upper()))
-        hist.createGraph(coefficient, "Value", "Frequency", "Histogram for Coefficients {0}".format(name.upper()))
-        hist.createGraph(egonetSize, "Value", "Frequency", "Histogram for Egonet size {0}".format(name.upper()))
-        hist.createGraph(corenumber, "Value", "Frequency", "Histogram for Core Number size {0}".format(name.upper()))
+        hist.createGraph(connectedcomponents, "Value", "Probability",
+                         "Histogram for Connected Components {0}".format(name.upper()), 10)
+        # hist.createGraph(triangles, "Value", "Probability", "Histogram for Triangles {0}".format(name.upper()),4)
+        # hist.createGraph(coefficient, "Value", "Probability", "Histogram for Coefficients {0}".format(name.upper()), 3)
+        # hist.createGraph(egonetSize, "Value", "Probability", "Histogram for Egonet size {0}".format(name.upper()), 10)
+        # hist.createGraph(corenumber, "Value", "Probability", "Histogram for Core Number size {0}".format(name.upper()), 4)
     else:
         dataframe = mgp.buildegonet()
         print dataframe

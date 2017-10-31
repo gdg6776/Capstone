@@ -78,12 +78,12 @@ def main():
     if isinstance(mgp.buildegonet(), tuple):
         (connectedcomponents, triangles, coefficient, egonetSize, corenumber) = mgp.buildegonet()
         hist = createhistogram()
-        hist.createGraph(connectedcomponents, "Value", "Percentage",
+        hist.createGraph(connectedcomponents, "Value", "Frequency",
                          "Histogram for Connected Components {0}".format(name.upper()))
-        hist.createGraph(triangles, "Value", "Percentage", "Histogram for Triangles {0}".format(name.upper()))
-        hist.createGraph(coefficient, "Value", "Percentage", "Histogram for Coefficients {0}".format(name.upper()))
-        hist.createGraph(egonetSize, "Value", "Percentage", "Histogram for Egonet size {0}".format(name.upper()))
-        hist.createGraph(corenumber, "Value", "Percentage", "Histogram for Core Number size {0}".format(name.upper()))
+        hist.createGraph(triangles, "Value", "Frequency", "Histogram for Triangles {0}".format(name.upper()))
+        hist.createGraph(coefficient, "Value", "Frequency", "Histogram for Coefficients {0}".format(name.upper()))
+        hist.createGraph(egonetSize, "Value", "Frequency", "Histogram for Egonet size {0}".format(name.upper()))
+        hist.createGraph(corenumber, "Value", "Frequency", "Histogram for Core Number size {0}".format(name.upper()))
     else:
         dataframe = mgp.buildegonet()
         print dataframe

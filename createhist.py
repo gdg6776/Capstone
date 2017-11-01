@@ -10,9 +10,9 @@ class createhistogram(object):
         fig = plt.figure()
         ax = plt.subplot(111)
 
-        if title == "" or title == "":
-            ax.hist(dict_1.values(), normed=True,
-                                               cumulative=True)
+        if title == "Histogram for Coefficients ATRISK" or title == "Histogram for Coefficients NOTATRISK":
+            ax.hist(dict_1.values(), bins=range_value, normed=True,
+                cumulative=True)
         else:
             ax.hist(dict_1.values(), bins = range(range_value), normed=True,
                     cumulative=True)

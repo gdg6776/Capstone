@@ -5,5 +5,4 @@ To start the program simply run the schell script job.sh using following command
  - "chmod u+x job.sh" #This makes script runnable for you
  - "./job.sh"
 
-and follow the on screen instructions.
 This should give you the analysis of Youtube data.

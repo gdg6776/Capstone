@@ -44,7 +44,7 @@ class task(object):
                              "Histogram for Connected Components {0}".format(name.upper()), 10)
             hist.createGraph(triangles, "Value", "Probability", "Histogram for Triangles {0}".format(name.upper()), 4)
             hist.createGraph(coefficient, "Value", "Probability", "Histogram for Coefficients {0}".format(name.upper()),
-                             3)
+                             10)
             hist.createGraph(egonetSize, "Value", "Probability", "Histogram for Egonet size {0}".format(name.upper()),
                              10)
             hist.createGraph(corenumber, "Value", "Probability",

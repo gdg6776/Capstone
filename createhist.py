@@ -6,11 +6,18 @@ class createhistogram(object):
         pass
 
     def createGraph(self, dict_1, x, y, title, range_value):
+
         fig = plt.figure()
         ax = plt.subplot(111)
-        ax.hist(dict_1.values(), bins=range(range_value), normed=True,
-                                           cumulative=True)
+
+        if title == "" or title == "":
+            ax.hist(dict_1.values(), normed=True,
+                                               cumulative=True)
+        else:
+            ax.hist(dict_1.values(), bins = range(range_value), normed=True,
+                    cumulative=True)
+
         plt.xlabel(x)
         plt.ylabel(y)
         plt.title(title)
-        fig.savefig(title + str(".pdf"), dpi = fig.dpi)
+        fig.savefig(title + str(".pdf"), dpi=fig.dpi)

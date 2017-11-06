@@ -83,11 +83,11 @@ def main():
             pd = ProcessingData(dataframe_train)
             train_data = pd.datapreprocessing()
 
-            # rd = read(graph2)
-            # mgp = mainGraphProgram(rd.readG(), riskfactor, name, filtervalue)
-            # dataframe_test = mgp.buildegonet()
-            # pd = ProcessingData(dataframe_test)
-            # test_data = pd.datapreprocessing()
+            rd = read(graph2)
+            mgp = mainGraphProgram(rd.readG(), riskfactor, name, filtervalue)
+            dataframe_test = mgp.buildegonet()
+            pd = ProcessingData(dataframe_test)
+            test_data = pd.datapreprocessing()
 
             print "Performing analysis on Egonet features using Logistic Regression..."
             # #Logistic Model

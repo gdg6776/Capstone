@@ -10,16 +10,15 @@ from sklearn import cross_validation
 
 
 class mainGraphProgram(object):
-    def __init__(self, graphname, riskfactor, name, filtervalue, data):
+    def __init__(self, graphname, riskfactor, name, data):
         self.graphname = graphname
         self.riskfactor = riskfactor
         self.name = name
-        self.filtervalue = filtervalue
         self.data = data
 
     def buildegonet(self):
         df = ""
-        egraph = ego(self.graphname, self.riskfactor, self.name, self.filtervalue, self.data)
+        egraph = ego(self.graphname, self.riskfactor, self.name, self.data)
         return egraph.egodata()
 
 
@@ -27,12 +26,12 @@ class task(object):
     def __init__(self):
         pass
 
-    def performtask(self, graph, riskfactor, name, filtervalue, nodes):
+    def performtask(self, graph, riskfactor, name, nodes):
         index = 0
 
         print "Creating the egonet for each node and calculating core number, " \
               "triangle count, coefficients, egonetsize and connected components for " + str(name)
-        mgp = mainGraphProgram(graph, riskfactor, name, filtervalue, nodes)
+        mgp = mainGraphProgram(graph, riskfactor, name, nodes)
         egofeatures = mgp.buildegonet()
         egofeaturesnamelist = ['Connected Components ', 'Triangles ', 'Coefficients ', 'Egonet size ','Core Number size ']
         binvalues = [10,4,30,10,4]
@@ -48,7 +47,6 @@ class task(object):
 
 
 def main():
-    filtervalue = False
     graph = "dev.graphml"
     graph2 = "test.graphml"
     riskfactor = -1
@@ -61,17 +59,20 @@ def main():
             # riskfactor = "1"
             # name = "atrisk"
             # rd = read(graph)
-            # graphdata, dataframe = rd.readG()
-            # t.performtask(graphdata, riskfactor, name, filtervalue, graphdata.nodes())
+            # graphdata= rd.readG()[0]
+            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
             pass
+
         elif value == 0:
+            # print "Performing analysis on users who are Not atRisk..."
             # riskfactor = "0"
             # name = "notatrisk"
-            # print "Performing analysis on users who are Not atRisk..."
-            # t.performtask(graph, riskfactor, name, filtervalue)
+            # rd = read(graph)
+            # graphdata= rd.readG()[0]
+            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
             pass
+
         else:
-            filtervalue = True
             rd = read(graph)
             graphdata, dataframe = rd.readG()
 
@@ -85,11 +86,11 @@ def main():
             subG = graphdata.subgraph(x_train.ravel())
 
             #Compute graph features and create training data -  graph restricted to training users
-            mgp = mainGraphProgram(subG, riskfactor, name, filtervalue, x_train.ravel())
+            mgp = mainGraphProgram(subG, riskfactor, name, x_train.ravel())
             train_data = mgp.buildegonet()
 
             #Compute graph features and create testing data- graph restricted just to training + test (or dev) users only
-            mgp = mainGraphProgram(graphdata, riskfactor, name, filtervalue, x_test.ravel())
+            mgp = mainGraphProgram(graphdata, riskfactor, name, x_test.ravel())
             test_data = mgp.buildegonet()
 
             print "Performing analysis on Egonet features using Logistic Regression..."

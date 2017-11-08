@@ -76,7 +76,7 @@ def main():
             X = dataframe.as_matrix(['Node'])
             Y = dataframe.as_matrix(['Risk Factor'])
 
-            # Split the data into testing and training...
+            # Split the users into testing and training...
             x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
 
             #Create a subgraph restricted to training users

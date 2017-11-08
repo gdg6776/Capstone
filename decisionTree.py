@@ -8,18 +8,22 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report
 
 class decisiontreeclassifier(object):
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, train_data, test_data):
+        self.train_data = train_data
+        self.test_data = test_data
 
     def model(self):
         columns = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']
         classfier_column = ['riskfactor']
-        # print self.data
-        X = self.data.as_matrix(columns)
-        Y = self.data.as_matrix(classfier_column)
-        self.decisiontree(X,Y)
 
-    def decisiontree(self, X, Y):
+        X_train = self.train_data.as_matrix(columns)
+        Y_train = self.train_data.as_matrix(classfier_column)
+
+        X_test = self.test_data.as_matrix(columns)
+        Y_test = self.test_data.as_matrix(classfier_column)
+        self.decisiontree(X_train, Y_train, X_test, Y_test)
+
+    def decisiontree(self,X_train, Y_train, X_test, Y_test):
         """
                This is the function which calculates the Logistic regression and draws graphs related to it.
                :param X: This is the matrix of all the columns except the classifier column of
@@ -33,9 +37,8 @@ class decisiontreeclassifier(object):
         np.set_printoptions(suppress=True)
         ######### Without GridSearch #####################
         model = tree.DecisionTreeClassifier()
-        x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
-        model.fit(x_train, y_train.ravel())
-        y_true, y_pred = y_test, model.predict(x_test)
+        model.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, model.predict(X_test)
         print "-----Decision Tree without GridSearch-----"
         print classification_report(y_true, y_pred)
         ##################################################
@@ -43,10 +46,9 @@ class decisiontreeclassifier(object):
 
         ######### With GridSearch #####################
         grid_values = {'max_depth': np.arange(3, 10)}
-        x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
         clf = GridSearchCV(tree.DecisionTreeClassifier(), param_grid=grid_values, scoring="f1", cv=5)
-        clf.fit(x_train, y_train.ravel())
-        y_true, y_pred = y_test, clf.predict(x_test)
+        clf.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, clf.predict(X_test)
         print "-----Decision Tree with GridSearch-----"
         print classification_report(y_true, y_pred)
         ##################################################

@@ -39,8 +39,8 @@ def readGraph(graph):
 def createdata(notatrisk_list, atrisk_list):
     name = "Untitled.graphml"
     gd = read(name)
-    graph1 = gd.readG()
-    graph2 = gd.readG()
+    graph1, df = gd.readG()
+    graph2, df = gd.readG()
 
     notatrisk_list_1290 = random.sample(notatrisk_list,
                                         1290)  # Choosing random 1290 nodes from not at risk list (testing).
@@ -51,18 +51,16 @@ def createdata(notatrisk_list, atrisk_list):
     atrisk_list_135 = list(
         np.setdiff1d(atrisk_list, atrisk_list_100, assume_unique=True))  # remaining 135 nodes from at risk (Dev).
 
+
     ### Development data ###
-    # Removing the 1290-Not at risk and 100-atrisk from Graph will help us build the Development data.
-    for node in list(itertools.chain(notatrisk_list_1290, atrisk_list_100)):
-        graph1.remove_node(node)
-    nx.write_graphml(graph1, "dev.graphml")
+    subgraphdevelopment = graph1.subgraph(list(itertools.chain(notatrisk_list_1743, atrisk_list_135)))
+    nx.write_graphml(subgraphdevelopment, "dev.graphml")
+
+    ### Testing data ###
+    subgraphtesting = graph1.subgraph(list(itertools.chain(notatrisk_list_1290, atrisk_list_100)))
+    nx.write_graphml(subgraphtesting, "test.graphml")
 
 
-    ### Testing Data ###
-    #Removing the 1743-Not at risk and 135-atrisk from Graph will help us build the Test data.
-    for node in list(itertools.chain(notatrisk_list_1743, atrisk_list_135)):
-        graph2.remove_node(node)
-    nx.write_graphml(graph2, "test.graphml")
 
 
 

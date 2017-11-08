@@ -2,111 +2,114 @@ import sys
 from createhist import createhistogram
 from decisionTree import decisiontreeclassifier
 from egograph import ego
-from logisticmodel import ProcessingData
 from logisticmodel import classifydata
 from readData import read
 from rfclassifier import randomforestclassifier
 from svmModel import svmMod
+from sklearn import cross_validation
 
 
 class mainGraphProgram(object):
-    def __init__(self, graphname, riskfactor, name, filtervalue):
+    def __init__(self, graphname, riskfactor, name, filtervalue, data):
         self.graphname = graphname
         self.riskfactor = riskfactor
         self.name = name
         self.filtervalue = filtervalue
+        self.data = data
 
     def buildegonet(self):
         df = ""
-        egraph = ego(self.graphname, self.riskfactor, self.name, self.filtervalue)
-        if isinstance(egraph.egodata(), tuple):
-            return egraph.egodata()
-        else:
-            return egraph.egodata()
+        egraph = ego(self.graphname, self.riskfactor, self.name, self.filtervalue, self.data)
+        return egraph.egodata()
 
 
 class task(object):
     def __init__(self):
         pass
 
-    def performtask(self, graph, riskfactor, name, filtervalue):
-        rd = read(graph)
+    def performtask(self, graph, riskfactor, name, filtervalue, nodes):
+        index = 0
+
         print "Creating the egonet for each node and calculating core number, " \
               "triangle count, coefficients, egonetsize and connected components for " + str(name)
-        mgp = mainGraphProgram(rd.readG(), riskfactor, name, filtervalue)
+        mgp = mainGraphProgram(graph, riskfactor, name, filtervalue, nodes)
+        egofeatures = mgp.buildegonet()
+        egofeaturesnamelist = ['Connected Components ', 'Triangles ', 'Coefficients ', 'Egonet size ','Core Number size ']
+        binvalues = [10,4,30,10,4]
+        hist = createhistogram()
+        print "Creating Histograms..."
+        print ""
 
-        if isinstance(mgp.buildegonet(), tuple):
-            (connectedcomponents, triangles, coefficient, egonetSize, corenumber) = mgp.buildegonet()
-            hist = createhistogram()
-            print "Creating Histograms..."
-            print ""
-            hist.createGraph(connectedcomponents, "Value", "Probability",
-                             "Histogram for Connected Components {0}".format(name.upper()), 10)
-            hist.createGraph(triangles, "Value", "Probability", "Histogram for Triangles {0}".format(name.upper()), 4)
-            hist.createGraph(coefficient, "Value", "Probability", "Histogram for Coefficients {0}".format(name.upper()),
-                             30)
-            hist.createGraph(egonetSize, "Value", "Probability", "Histogram for Egonet size {0}".format(name.upper()),
-                             10)
-            hist.createGraph(corenumber, "Value", "Probability",
-                             "Histogram for Core Number size {0}".format(name.upper()), 4)
-        else:
-            dataframe = mgp.buildegonet()
-            print dataframe
+
+        for value in egofeaturesnamelist:
+            hist.createGraph(egofeatures[index], "Value", "Probability", "Histogram for "+value+"{0}".format(name.upper()),
+                             binvalues[index])
+            index += 1
 
 
 def main():
     filtervalue = False
     graph = "dev.graphml"
+    graph2 = "test.graphml"
     riskfactor = -1
     name = ""
     t = task()
 
     for value in range(0, 3):
         if value == 1:
-            print "Performing analysis on users who are atRisk..."
-            riskfactor = "1"
-            name = "atrisk"
-            t.performtask(graph, riskfactor, name, filtervalue)
+            # print "Performing analysis on users who are atRisk..."
+            # riskfactor = "1"
+            # name = "atrisk"
+            # rd = read(graph)
+            # graphdata, dataframe = rd.readG()
+            # t.performtask(graphdata, riskfactor, name, filtervalue, graphdata.nodes())
+            pass
         elif value == 0:
-            riskfactor = "0"
-            name = "notatrisk"
-            print "Performing analysis on users who are Not atRisk..."
-            t.performtask(graph, riskfactor, name, filtervalue)
+            # riskfactor = "0"
+            # name = "notatrisk"
+            # print "Performing analysis on users who are Not atRisk..."
+            # t.performtask(graph, riskfactor, name, filtervalue)
+            pass
         else:
             filtervalue = True
-            graph1 = "dev.graphml"
-            graph2 = "test.graphml"
+            rd = read(graph)
+            graphdata, dataframe = rd.readG()
 
-            rd = read(graph1)
-            mgp = mainGraphProgram(rd.readG(), riskfactor, name, filtervalue)
-            dataframe_train = mgp.buildegonet()
-            pd = ProcessingData(dataframe_train)
-            train_data = pd.datapreprocessing()
+            X = dataframe.as_matrix(['Node'])
+            Y = dataframe.as_matrix(['Risk Factor'])
 
-            rd = read(graph2)
-            mgp = mainGraphProgram(rd.readG(), riskfactor, name, filtervalue)
-            dataframe_test = mgp.buildegonet()
-            pd = ProcessingData(dataframe_test)
-            test_data = pd.datapreprocessing()
+            # Split the data into testing and training...
+            x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
+
+            #Create a subgraph restricted to training users
+            subG = graphdata.subgraph(x_train.ravel())
+
+            #Compute graph features and create training data -  graph restricted to training users
+            mgp = mainGraphProgram(subG, riskfactor, name, filtervalue, x_train.ravel())
+            train_data = mgp.buildegonet()
+
+            #Compute graph features and create testing data- graph restricted just to training + test (or dev) users only
+            mgp = mainGraphProgram(graphdata, riskfactor, name, filtervalue, x_test.ravel())
+            test_data = mgp.buildegonet()
 
             print "Performing analysis on Egonet features using Logistic Regression..."
-            # #Logistic Model
-            logistic = classifydata(train_data)
+            #Logistic Model
+            logistic = classifydata(train_data, test_data)
             logistic.classifier()
 
             print "Performing analysis on Egonet features using Support Vector Machines..."
             # SVM
-            svmmod = svmMod(train_data)
+            svmmod = svmMod(train_data, test_data)
             svmmod.model()
-
+            #
             print "Performing analysis on Egonet features using Random Forest..."
             # Random Forest
-            rf = randomforestclassifier(train_data)
+            rf = randomforestclassifier(train_data, test_data)
             rf.model()
-
-            # Decision Tree
+            #
+            # # Decision Tree
             print "Performing analysis on Egonet features using Decision Tree..."
-            dt = decisiontreeclassifier(train_data)
+            dt = decisiontreeclassifier(train_data, test_data)
             dt.model()
             sys.exit()
 

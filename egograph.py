@@ -1,33 +1,21 @@
 import networkx as nx
-from dataf import dataframe
+import dataf
 
 
 class ego(object):
-    def __init__(self, graphname, riskfactor, name, filtervalue):
+    def __init__(self, graphname, riskfactor, name, filtervalue, data):
         self.graphname = graphname
         self.riskfactor = riskfactor
         self.name = name
         self.filtervalue = filtervalue
+        self.data = data
 
     def egodata(self):
         corenumber = {}
         connectedcomponents = {}
         triangles = {}
         coefficient = {}
-        pathLength = {}
-        atrisk = {}
-        notatrisk = {}
         egonetSize = {}
-        riskfactorDict = {}
-        hasBridge = {}
-        triangleCount = ""
-        coeff = ""
-        highestConnectedComponent = 0
-        connectedComponentsSubGraph = ""
-
-        notatrisk_list = []
-        atrisk_list = []
-        random_list = []
 
         nodes = list()
         cc = list()
@@ -35,28 +23,18 @@ class ego(object):
         coeff = list()
         egoSize = list()
         hasrisk = list()
-        nodesList = list()
         corenumberlist = list()
-        bridgelist = list()
 
         if not self.filtervalue:
-            # nodes = filter(lambda (n, d): d[n]["hasrisk"] == self.riskfactor,
-            #                self.graphname.nodes(data=True))
-            for node in self.graphname.nodes():
+            for node in self.data:
                 if self.graphname.node[node]["hasrisk"] == self.riskfactor:
                     nodes.append(node)
         else:
             nodes = self.graphname.nodes()
-            # hasrisk = filter(lambda (n, d): d["hasrisk"],
-            #                self.graphname.nodes(data=True))
-            # for node in nodes:
-            #     hasrisk.append(self.graphname.node[node]["hasrisk"])
 
-        for node in nodes:
+
+        for node in self.data:
             ego_graph = nx.ego_graph(self.graphname, node)
-
-            #bridges
-            # print str(node) + " " +str(algorithms.bridges.has_bridges(ego_graph))
 
             hasrisk.append(self.graphname.node[node]["hasrisk"])
 
@@ -84,8 +62,9 @@ class ego(object):
             connectedcomponents[node] = number
             cc.append(number)
 
+
         if self.filtervalue:
-            frame = dataframe()
-            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist,self.graphname.nodes())
+            frame = dataf.dataframe()
+            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist,self.data)
         else:
             return connectedcomponents, triangles, coefficient, egonetSize, corenumber

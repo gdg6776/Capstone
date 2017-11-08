@@ -1,4 +1,7 @@
 import networkx as nx
+import numpy as np
+import pandas as pd
+from sklearn import cross_validation
 
 class read(object):
 
@@ -6,7 +9,21 @@ class read(object):
         self.name = name
 
     def readG(self):
+        dictionary = {}
+
+
         g = nx.read_graphml(self.name)
         g = nx.Graph(g)
         g.remove_edges_from(g.selfloop_edges())
-        return g
+
+
+        for node in g.nodes():
+            dictionary[node] = int(g.nodes[node]["hasrisk"].encode("utf-8"))
+
+        attributes = ['Node', 'Risk Factor']
+        data = np.array([dictionary.keys(), dictionary.values()]).transpose()
+
+        df = pd.DataFrame(data=data, index=[i for i in range(len(dictionary.keys()))],
+                          columns=attributes)
+
+        return g, df

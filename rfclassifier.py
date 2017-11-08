@@ -6,18 +6,22 @@ from sklearn.metrics import classification_report
 
 
 class randomforestclassifier(object):
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, train_data, test_data):
+        self.train_data = train_data
+        self.test_data = test_data
 
     def model(self):
         columns = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']
         classfier_column = ['riskfactor']
-        # print self.data
-        X = self.data.as_matrix(columns)
-        Y = self.data.as_matrix(classfier_column)
-        self.randomforest(X,Y)
 
-    def randomforest(self, X, Y):
+        X_train = self.train_data.as_matrix(columns)
+        Y_train = self.train_data.as_matrix(classfier_column)
+
+        X_test = self.test_data.as_matrix(columns)
+        Y_test = self.test_data.as_matrix(classfier_column)
+        self.randomforest(X_train, Y_train, X_test, Y_test)
+
+    def randomforest(self, X_train, Y_train, X_test, Y_test):
         """
                This is the function which calculates the Logistic regression and draws graphs related to it.
                :param X: This is the matrix of all the columns except the classifier column of
@@ -31,9 +35,8 @@ class randomforestclassifier(object):
         np.set_printoptions(suppress=True)
         ######### Without GridSearch #####################
         model = RandomForestClassifier(n_estimators=1000)
-        x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
-        model.fit(x_train, y_train.ravel())
-        y_true, y_pred = y_test, model.predict(x_test)
+        model.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, model.predict(X_test)
         print "-----Random Forest without GridSearch-----"
         print classification_report(y_true, y_pred)
         ##################################################
@@ -43,10 +46,9 @@ class randomforestclassifier(object):
             'n_estimators': [200, 700],
             'max_features': ['auto', 'sqrt', 'log2']
         }
-        x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
         clf = GridSearchCV(RandomForestClassifier(n_estimators=1000), param_grid=grid_values, scoring="f1", cv=5)
-        clf.fit(x_train, y_train.ravel())
-        y_true , y_pred = y_test, clf.predict(x_test)
+        clf.fit(X_train, Y_train.ravel())
+        y_true , y_pred = Y_test, clf.predict(X_test)
         print "-----Random Forest with GridSearch-----"
         print classification_report(y_true, y_pred)
         ##################################################

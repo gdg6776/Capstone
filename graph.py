@@ -55,23 +55,20 @@ def main():
 
     for value in range(0, 3):
         if value == 1:
-            # print "Performing analysis on users who are atRisk..."
-            # riskfactor = "1"
-            # name = "atrisk"
-            # rd = read(graph)
-            # graphdata= rd.readG()[0]
-            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
-            pass
+            print "Performing analysis on users who are atRisk..."
+            riskfactor = "1"
+            name = "atrisk"
+            rd = read(graph)
+            graphdata= rd.readG()[0]
+            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
 
         elif value == 0:
-            # print "Performing analysis on users who are Not atRisk..."
-            # riskfactor = "0"
-            # name = "notatrisk"
-            # rd = read(graph)
-            # graphdata= rd.readG()[0]
-            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
-            pass
-
+            print "Performing analysis on users who are Not atRisk..."
+            riskfactor = "0"
+            name = "notatrisk"
+            rd = read(graph)
+            graphdata= rd.readG()[0]
+            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         else:
             rd = read(graph)
             graphdata, dataframe = rd.readG()

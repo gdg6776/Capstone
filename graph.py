@@ -7,6 +7,16 @@ from readData import read
 from rfclassifier import randomforestclassifier
 from svmModel import svmMod
 from sklearn import cross_validation
+from sklearn import covariance
+from sklearn.model_selection import train_test_split
+import networkx as nx
+from sklearn import preprocessing
+
+
+from sklearn.svm import SVC
+from sklearn.datasets import load_digits
+from sklearn.feature_selection import RFE
+import matplotlib.pyplot as plt
 
 
 class mainGraphProgram(object):
@@ -55,31 +65,31 @@ def main():
 
     for value in range(0, 3):
         if value == 1:
-            print "Performing analysis on users who are atRisk..."
-            riskfactor = "1"
-            name = "atrisk"
-            rd = read(graph)
-            graphdata= rd.readG()[0]
-            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
-
+            # print "Performing analysis on users who are atRisk..."
+            # riskfactor = "1"
+            # name = "atrisk"
+            # rd = read(graph)
+            # graphdata= rd.readG()[0]
+            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            pass
         elif value == 0:
-            print "Performing analysis on users who are Not atRisk..."
-            riskfactor = "0"
-            name = "notatrisk"
-            rd = read(graph)
-            graphdata= rd.readG()[0]
-            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            # print "Performing analysis on users who are Not atRisk..."
+            # riskfactor = "0"
+            # name = "notatrisk"
+            # rd = read(graph)
+            # graphdata= rd.readG()[0]
+            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            pass
         else:
             rd = read(graph)
             graphdata, dataframe = rd.readG()
 
             X = dataframe.as_matrix(['Node'])
-            Y = dataframe.as_matrix(['Risk Factor'])
 
             # Split the users into testing and training...
-            x_train, x_test, y_train, y_test = cross_validation.train_test_split(X, Y)
+            x_train, x_test = train_test_split(X,test_size=0.3)
 
-            #Create a subgraph restricted to training users
+            # #Create a subgraph restricted to training users
             subG = graphdata.subgraph(x_train.ravel())
 
             #Compute graph features and create training data -  graph restricted to training users
@@ -90,27 +100,56 @@ def main():
             mgp = mainGraphProgram(graphdata, riskfactor, name, x_test.ravel())
             test_data = mgp.buildegonet()
 
-            print "Performing analysis on Egonet features using Logistic Regression..."
-            #Logistic Model
+            #Normalizing the train data...
+            normalized_train_df = (train_data - train_data.mean()) / train_data.std()
+
+            #Normalizing the test data...
+            test_data['connectedComponents'] = (test_data['connectedComponents'] - test_data['connectedComponents'].mean()) / \
+                                 test_data['connectedComponents'].std()
+
+            test_data['triangles'] = (test_data['triangles'] - test_data[
+                'triangles'].mean()) / \
+                                               test_data['triangles'].std()
+
+            test_data['coefficient'] = (test_data['coefficient'] - test_data[
+                'coefficient'].mean()) / \
+                                               test_data['coefficient'].std()
+
+            test_data['egonetSize'] = (test_data['egonetSize'] - test_data[
+                'egonetSize'].mean()) / \
+                                               test_data['egonetSize'].std()
+
+            test_data['corenumber'] = (test_data['corenumber'] - test_data[
+                'corenumber'].mean()) / \
+                                      test_data['corenumber'].std()
+
+            #
+            # print "Performing analysis on Egonet features using Logistic Regression..."
+            # # Logistic Model
             logistic = classifydata(train_data, test_data)
             logistic.classifier()
-
-            print "Performing analysis on Egonet features using Support Vector Machines..."
-            # SVM
-            svmmod = svmMod(train_data, test_data)
-            svmmod.model()
             #
+            # print "Performing analysis on Egonet features using Support Vector Machines..."
+            # # SVM
+            # svmmod = svmMod(train_data, test_data)
+            # svmmod.model()
+            # # #
             print "Performing analysis on Egonet features using Random Forest..."
             # Random Forest
             rf = randomforestclassifier(train_data, test_data)
             rf.model()
-            #
-            # # Decision Tree
+
+            # Decision Tree
             print "Performing analysis on Egonet features using Decision Tree..."
             dt = decisiontreeclassifier(train_data, test_data)
             dt.model()
-            sys.exit()
+            #
+            # # mgp = mainGraphProgram(graphdata, riskfactor, name, graphdata.nodes())
+            # # dataforcov = mgp.buildegonet()
+            # # cov = covariance.empirical_covariance(dataforcov.as_matrix(), assume_centered=False)
+            # # print cov
 
+            sys.exit()
 
 if __name__ == '__main__':
     main()

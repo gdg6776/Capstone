@@ -8,6 +8,7 @@ from sklearn.metrics import recall_score
 from sklearn.grid_search import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.feature_selection import RFE
 
 class svmMod(object):
     def __init__(self, train_data, test_data):
@@ -38,23 +39,34 @@ class svmMod(object):
                :return:None
                """
         np.set_printoptions(suppress=True)
+        model = svm.SVC()
 
         ######### Without GridSearch #####################
-        model = svm.SVC()
-        model.fit(X_train, Y_train)
-        y_true, y_pred = Y_test, model.predict(X_test)
-        print "-----Support Vector Machine without GridSearch-----"
-        print classification_report(y_true, y_pred)
+        # model.fit(X_train, Y_train)
+        # y_true, y_pred = Y_test, model.predict(X_test)
+        # print "-----Support Vector Machine without GridSearch-----"
+        # print classification_report(y_true, y_pred)
         ##################################################
 
 
         ########## With gridsearch #######################
-        scoring = ['accuracy', 'precision', 'recall', 'f1']
-        parameters = {'kernel': ('linear', 'rbf'), 'C': [1, 10]}
-        svc = svm.SVC()
-        clf = GridSearchCV(svc, parameters, scoring="f1",cv=5)
-        clf.fit(X_train, Y_train.ravel())
-        y_true, y_pred = Y_test, clf.predict(X_test)
-        print "-----Support Vector Machine with GridSearch-----"
-        print classification_report(y_true, y_pred)
-        ########## #########################################
+        # scoring = ['accuracy', 'precision', 'recall', 'f1']
+        # parameters = {'kernel': ('linear', 'rbf'), 'C': [1, 10]}
+        #
+        # clf = GridSearchCV(model, parameters, scoring="f1",cv=5)
+        # clf.fit(X_train, Y_train.ravel())
+        # y_true, y_pred = Y_test, clf.predict(X_test)
+        # print "-----Support Vector Machine with GridSearch-----"
+        # print classification_report(y_true, y_pred)
+        ####################################################
+
+
+        ########## RFE #######################
+        # rfe = RFE(svm.SVR(kernel='linear'), 5)
+        # rfe = rfe.fit(X_train, Y_train.ravel())
+        # y_true, y_pred = Y_test, rfe.predict(X_test)
+        # # print y_true
+        # # print y_pred
+        # print "-----RFE-----"
+        # # print classification_report(y_true, y_pred)
+        ####################################################

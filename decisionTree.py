@@ -6,6 +6,8 @@ from sklearn.metrics import recall_score
 from sklearn.grid_search import GridSearchCV
 import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report
+from sklearn.feature_selection import RFE
+
 
 class decisiontreeclassifier(object):
     def __init__(self, train_data, test_data):
@@ -35,21 +37,30 @@ class decisiontreeclassifier(object):
                :return:None
                """
         np.set_printoptions(suppress=True)
-        ######### Without GridSearch #####################
         model = tree.DecisionTreeClassifier()
-        model.fit(X_train, Y_train.ravel())
-        y_true, y_pred = Y_test, model.predict(X_test)
-        print "-----Decision Tree without GridSearch-----"
-        print classification_report(y_true, y_pred)
+
+        ######### Without GridSearch #####################
+        # model.fit(X_train, Y_train.ravel())
+        # y_true, y_pred = Y_test, model.predict(X_test)
+        # print "-----Decision Tree without GridSearch-----"
+        # print classification_report(y_true, y_pred)
         ##################################################
 
 
         ######### With GridSearch #####################
-        grid_values = {'max_depth': np.arange(3, 10)}
-        clf = GridSearchCV(tree.DecisionTreeClassifier(), param_grid=grid_values, scoring="f1", cv=5)
-        clf.fit(X_train, Y_train.ravel())
-        y_true, y_pred = Y_test, clf.predict(X_test)
-        print "-----Decision Tree with GridSearch-----"
+        # grid_values = {'max_depth': np.arange(3, 10)}
+        # clf = GridSearchCV(model, param_grid=grid_values, scoring="f1", cv=5)
+        # clf.fit(X_train, Y_train.ravel())
+        # y_true, y_pred = Y_test, clf.predict(X_test)
+        # print "-----Decision Tree with GridSearch-----"
+        # print classification_report(y_true, y_pred)
+        ##################################################
+
+        ######### RFE ####################################
+        rfe = RFE(model, 5)
+        rfe = rfe.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, rfe.predict(X_test)
+        print "-----RFE-----"
         print classification_report(y_true, y_pred)
         ##################################################
 

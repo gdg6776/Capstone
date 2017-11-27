@@ -1,22 +1,11 @@
 import sys
+from sklearn.model_selection import train_test_split
 from createhist import createhistogram
 from decisionTree import decisiontreeclassifier
 from egograph import ego
 from logisticmodel import classifydata
 from readData import read
 from rfclassifier import randomforestclassifier
-from svmModel import svmMod
-from sklearn import cross_validation
-from sklearn import covariance
-from sklearn.model_selection import train_test_split
-import networkx as nx
-from sklearn import preprocessing
-
-
-from sklearn.svm import SVC
-from sklearn.datasets import load_digits
-from sklearn.feature_selection import RFE
-import matplotlib.pyplot as plt
 
 
 class mainGraphProgram(object):
@@ -59,27 +48,25 @@ class task(object):
 def main():
     graph = "dev.graphml"
     graph2 = "test.graphml"
-    riskfactor = -1
     name = ""
     t = task()
+    rd = read(graph)
 
     for value in range(0, 3):
         if value == 1:
             print "Performing analysis on users who are atRisk..."
             riskfactor = "1"
             name = "atrisk"
-            rd = read(graph)
             graphdata= rd.readG()[0]
             t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         elif value == 0:
             print "Performing analysis on users who are Not atRisk..."
             riskfactor = "0"
             name = "notatrisk"
-            rd = read(graph)
             graphdata= rd.readG()[0]
             t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         else:
-            rd = read(graph)
+            riskfactor = -1
             graphdata, dataframe = rd.readG()
 
             X = dataframe.as_matrix(['Node'])
@@ -98,8 +85,6 @@ def main():
             mgp = mainGraphProgram(graphdata, riskfactor, name, x_test.ravel())
             test_data = mgp.buildegonet()
 
-            #Normalizing the train data...
-            normalized_train_df = (train_data - train_data.mean()) / train_data.std()
 
             #Normalizing the test data...
             test_data['connectedComponents'] = (test_data['connectedComponents'] - test_data['connectedComponents'].mean()) / \
@@ -121,17 +106,16 @@ def main():
                 'corenumber'].mean()) / \
                                       test_data['corenumber'].std()
 
-            #
-            # print "Performing analysis on Egonet features using Logistic Regression..."
-            # # Logistic Model
+            print "Performing analysis on Egonet features using Logistic Regression..."
+            # Logistic Model
             logistic = classifydata(train_data, test_data)
             logistic.classifier()
-            #
+
             # print "Performing analysis on Egonet features using Support Vector Machines..."
             # # SVM
             # svmmod = svmMod(train_data, test_data)
             # svmmod.model()
-            # # #
+
             print "Performing analysis on Egonet features using Random Forest..."
             # Random Forest
             rf = randomforestclassifier(train_data, test_data)
@@ -141,7 +125,7 @@ def main():
             print "Performing analysis on Egonet features using Decision Tree..."
             dt = decisiontreeclassifier(train_data, test_data)
             dt.model()
-            #
+
             # # mgp = mainGraphProgram(graphdata, riskfactor, name, graphdata.nodes())
             # # dataforcov = mgp.buildegonet()
             # # cov = covariance.empirical_covariance(dataforcov.as_matrix(), assume_centered=False)

@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
-
+import pdb
 
 class read(object):
     def __init__(self, name):
@@ -15,7 +15,8 @@ class read(object):
         g.remove_edges_from(g.selfloop_edges())
 
         for node in g.nodes():
-            dictionary[node] = int(g.nodes[node]["hasrisk"].encode("utf-8"))
+            pdb.set_trace()
+            dictionary[node] = int(g.node[node]["hasrisk"].encode("utf-8"))
 
         attributes = ['Node', 'Risk Factor']
         data = np.array([dictionary.keys(), dictionary.values()]).transpose()

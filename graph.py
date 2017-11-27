@@ -51,24 +51,21 @@ def main():
     name = ""
     t = task()
     rd = read(graph)
+    graphdata, dataframe = rd.readG()
 
     for value in range(0, 3):
         if value == 1:
             print "Performing analysis on users who are atRisk..."
             riskfactor = "1"
             name = "atrisk"
-            graphdata= rd.readG()[0]
             t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         elif value == 0:
             print "Performing analysis on users who are Not atRisk..."
             riskfactor = "0"
             name = "notatrisk"
-            graphdata= rd.readG()[0]
             t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         else:
             riskfactor = -1
-            graphdata, dataframe = rd.readG()
-
             X = dataframe.as_matrix(['Node'])
 
             # Split the users into testing and training...

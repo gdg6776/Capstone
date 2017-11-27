@@ -4,18 +4,15 @@ import pandas as pd
 
 
 class read(object):
-
     def __init__(self, name):
         self.name = name
 
     def readG(self):
         dictionary = {}
 
-
         g = nx.read_graphml(self.name)
         g = nx.Graph(g)
         g.remove_edges_from(g.selfloop_edges())
-
 
         for node in g.nodes():
             dictionary[node] = int(g.nodes[node]["hasrisk"].encode("utf-8"))

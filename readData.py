@@ -15,7 +15,6 @@ class read(object):
         g.remove_edges_from(g.selfloop_edges())
 
         for node in g.nodes():
-            pdb.set_trace()
             dictionary[node] = int(g.node[node]["hasrisk"].encode("utf-8"))
 
         attributes = ['Node', 'Risk Factor']

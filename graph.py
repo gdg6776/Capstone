@@ -6,7 +6,7 @@ from egograph import ego
 from logisticmodel import classifydata
 from readData import read
 from rfclassifier import randomforestclassifier
-
+from svmModel import svmMod
 
 class mainGraphProgram(object):
     def __init__(self, graphname, riskfactor, name, data):
@@ -108,10 +108,10 @@ def main():
             logistic = classifydata(train_data, test_data)
             logistic.classifier()
 
-            # print "Performing analysis on Egonet features using Support Vector Machines..."
-            # # SVM
-            # svmmod = svmMod(train_data, test_data)
-            # svmmod.model()
+            print "Performing analysis on Egonet features using Support Vector Machines..."
+            # SVM
+            svmmod = svmMod(train_data, test_data)
+            svmmod.model()
 
             print "Performing analysis on Egonet features using Random Forest..."
             # Random Forest

@@ -36,24 +36,24 @@ class randomforestclassifier(object):
         np.set_printoptions(suppress=True)
         model = RandomForestClassifier(n_estimators=1000)
         ######### Without GridSearch #####################
-        # model.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, model.predict(X_test)
-        # print "-----Random Forest without GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        model.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, model.predict(X_test)
+        print "-----Random Forest without GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
         ########## With gridsearch #######################
-        # grid_values = {
-        #     'n_estimators': [200, 700],
-        #     'max_features': ['auto', 'sqrt', 'log2']
-        # }
-        # clf = GridSearchCV(RandomForestClassifier(n_estimators=1000), param_grid=grid_values, scoring="f1", cv=5)
-        # clf.fit(X_train, Y_train.ravel())
-        # y_true , y_pred = Y_test, clf.predict(X_test)
-        # print "-----Random Forest with GridSearch-----"
-        # print classification_report(y_true, y_pred)
-        ##################################################
+        grid_values = {
+            'n_estimators': [200, 700],
+            'max_features': ['auto', 'sqrt', 'log2']
+        }
+        clf = GridSearchCV(RandomForestClassifier(n_estimators=1000), param_grid=grid_values, scoring="f1", cv=5)
+        clf.fit(X_train, Y_train.ravel())
+        y_true , y_pred = Y_test, clf.predict(X_test)
+        print "-----Random Forest with GridSearch-----"
+        print classification_report(y_true, y_pred)
 
+        ##################################################
         rfe = RFE(model, 4)
         rfe = rfe.fit(X_train, Y_train.ravel())
         y_true, y_pred = Y_test, rfe.predict(X_test)

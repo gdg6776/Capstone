@@ -21,3 +21,4 @@ class createhistogram(object):
         plt.ylabel(y)
         plt.title(title)
         fig.savefig(title + str(".png"), dpi=fig.dpi)
+        plt.clf()

@@ -53,22 +53,22 @@ class classifydata(object):
         np.set_printoptions(suppress=True)
         model = linear_model.LogisticRegression()
         # ######### Without GridSearch #####################
-        # model.fit(X_train, Y_train)
-        # y_true, y_pred = Y_test, model.predict(X_test)
-        # print "-----Logistic Regression without GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        model.fit(X_train, Y_train)
+        y_true, y_pred = Y_test, model.predict(X_test)
+        print "-----Logistic Regression without GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
 
         ######### With GridSearch #####################
-        # parameters = [{'penalty': ['l1'],
-        #                'C':[0.01, 0.1, 1, 5]},
-        #               {'penalty':['l2'], 'C': [0.01, 0.1, 1, 5] }]
-        # clf = GridSearchCV(model, parameters, cv=10, scoring="f1")
-        # clf.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, clf.predict(X_test)
-        # print "-----Logistic Regression with GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        parameters = [{'penalty': ['l1'],
+                       'C':[0.01, 0.1, 1, 5]},
+                      {'penalty':['l2'], 'C': [0.01, 0.1, 1, 5] }]
+        clf = GridSearchCV(model, parameters, cv=10, scoring="f1")
+        clf.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, clf.predict(X_test)
+        print "-----Logistic Regression with GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
         ######### RFE ########################

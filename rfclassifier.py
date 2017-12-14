@@ -36,10 +36,10 @@ class randomforestclassifier(object):
         np.set_printoptions(suppress=True)
         model = RandomForestClassifier()
         ######### Without GridSearch #####################
-        # model.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, model.predict(X_test)
-        # print "-----Random Forest without GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        model.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, model.predict(X_test)
+        print "-----Random Forest without GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
         ########## With gridsearch #######################
@@ -54,7 +54,6 @@ class randomforestclassifier(object):
         print "-----Random Forest with GridSearch-----"
         print clf.best_params_
         #print clf.coef_
-
         print classification_report(y_true, y_pred)
         ##################################################
 

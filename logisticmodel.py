@@ -54,10 +54,10 @@ class classifydata(object):
         np.set_printoptions(suppress=True)
         model = linear_model.LogisticRegression()
         # ######### Without GridSearch #####################
-        # model.fit(X_train, Y_train)
-        # y_true, y_pred = Y_test, model.predict(X_test)
-        # print "-----Logistic Regression without GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        model.fit(X_train, Y_train)
+        y_true, y_pred = Y_test, model.predict(X_test)
+        print "-----Logistic Regression without GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
 

@@ -3,12 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model, cross_validation
 from sklearn import metrics
-from sklearn import svm
+
 from sklearn.metrics import recall_score
 from sklearn.grid_search import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.feature_selection import RFE
+from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 
 class svmMod(object):
     def __init__(self, train_data, test_data):
@@ -39,13 +41,13 @@ class svmMod(object):
                :return:None
                """
         np.set_printoptions(suppress=True)
-        model = svm.SVC()
+        model = SVC()
 
         ######### Without GridSearch #####################
-        # model.fit(X_train, Y_train)
-        # y_true, y_pred = Y_test, model.predict(X_test)
-        # print "-----Support Vector Machine without GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        model.fit(X_train, Y_train)
+        y_true, y_pred = Y_test, model.predict(X_test)
+        print "-----Support Vector Machine without GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
 
@@ -62,11 +64,10 @@ class svmMod(object):
 
 
         ########## RFE #######################
-        # rfe = RFE(svm.SVR(kernel='linear'), 5)
-        # rfe = rfe.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, rfe.predict(X_test)
-        # # print y_true
-        # # print y_pred
-        # print "-----RFE-----"
-        # # print classification_report(y_true, y_pred)
+        svm = LinearSVC()
+        rfe = RFE(svm, 3)
+        rfe = rfe.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, rfe.predict(X_test)
+        print "-----RFE-----"
+        print classification_report(y_true, y_pred)
         ####################################################

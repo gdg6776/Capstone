@@ -40,10 +40,10 @@ class decisiontreeclassifier(object):
         model = tree.DecisionTreeClassifier()
 
         ######### Without GridSearch #####################
-        # model.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, model.predict(X_test)
-        # print "-----Decision Tree without GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        model.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, model.predict(X_test)
+        print "-----Decision Tree without GridSearch-----"
+        print classification_report(y_true, y_pred)
         ##################################################
 
 

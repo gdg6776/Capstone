@@ -25,9 +25,9 @@ class svmMod(object):
         X_test = self.test_data.as_matrix(columns)
         Y_test = self.test_data.as_matrix(classfier_column)
 
-        self.supposrtVectorMachines(X_train, Y_train, X_test, Y_test)
+        self.supportVectorMachines(X_train, Y_train, X_test, Y_test)
 
-    def supposrtVectorMachines(self, X_train, Y_train, X_test, Y_test):
+    def supportVectorMachines(self, X_train, Y_train, X_test, Y_test):
         """
                This is the function which calculates the Logistic regression and draws graphs related to it.
                :param X: This is the matrix of all the columns except the classifier column of
@@ -50,14 +50,14 @@ class svmMod(object):
 
 
         ########## With gridsearch #######################
-        # scoring = ['accuracy', 'precision', 'recall', 'f1']
-        # parameters = {'kernel': ('linear', 'rbf'), 'C': [1, 10]}
-        #
-        # clf = GridSearchCV(model, parameters, scoring="f1",cv=5)
-        # clf.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, clf.predict(X_test)
-        # print "-----Support Vector Machine with GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        scoring = ['accuracy', 'precision', 'recall', 'f1']
+        parameters = {'kernel': ('linear', 'rbf'), 'C': [1, 10], 'class_weight':['balanced']}
+        
+        clf = GridSearchCV(model, parameters, scoring="f1",cv=5)
+        clf.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, clf.predict(X_test)
+        print "-----Support Vector Machine with GridSearch-----"
+        print classification_report(y_true, y_pred)
         ####################################################
 
 

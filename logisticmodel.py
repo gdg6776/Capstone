@@ -4,6 +4,7 @@ References -  http://librimind.com/2015/07/logistic-regression-with-python/
 import warnings
 
 import matplotlib.pyplot as plt
+import pdb
 import numpy as np
 from sklearn import linear_model, cross_validation
 from sklearn import svm
@@ -61,22 +62,26 @@ class classifydata(object):
 
 
         ######### With GridSearch #####################
-        # parameters = [{'penalty': ['l1'],
-        #                'C':[0.01, 0.1, 1, 5]},
-        #               {'penalty':['l2'], 'C': [0.01, 0.1, 1, 5] }]
-        # clf = GridSearchCV(model, parameters, cv=10, scoring="f1")
-        # clf.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, clf.predict(X_test)
-        # print "-----Logistic Regression with GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        parameters = [{'penalty': ['l1'], 'class_weight':['balanced'],
+                       'C':[.0001, .001, 0.01, 0.1, 1,5,10]},
+                      {'penalty':['l2'], 'class_weight':['balanced'], 'C': [.0001, 0.001, 0.01, 0.1, 1,5,10] }]
+        clf = GridSearchCV(model, parameters, cv=10, scoring="f1")
+        z = clf.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, clf.predict(X_test)
+        print "-----Logistic Regression with GridSearch-----"
+        #print clf.cv_results_ #cv_results_
+        print clf.best_estimator_.coef_
+        #print model.coef_
+        #pdb.set_trace() 
+        print classification_report(y_true, y_pred)
         ##################################################
 
         ######### RFE ########################
-        rfe = RFE(model, 4)
-        rfe = rfe.fit(X_train, Y_train.ravel())
-        y_true, y_pred = Y_test, rfe.predict(X_test)
-        print "-----RFE-----"
-        print classification_report(y_true, y_pred)
+        # rfe = RFE(model, 4)
+        # rfe = rfe.fit(X_train, Y_train.ravel())
+        # y_true, y_pred = Y_test, rfe.predict(X_test)
+        # print "-----RFE-----"
+        # print classification_report(y_true, y_pred)
         ##################################################
 
 

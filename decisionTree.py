@@ -48,20 +48,28 @@ class decisiontreeclassifier(object):
 
 
         ######### With GridSearch #####################
-        # grid_values = {'max_depth': np.arange(3, 10)}
-        # clf = GridSearchCV(model, param_grid=grid_values, scoring="f1", cv=5)
-        # clf.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, clf.predict(X_test)
-        # print "-----Decision Tree with GridSearch-----"
-        # print classification_report(y_true, y_pred)
+        grid_values = {
+
+            #'max_depth': np.arange(3, 10), 
+            'criterion' : ['gini', 'entropy'],
+            'class_weight':['balanced']
+        }
+        clf = GridSearchCV(model, param_grid=grid_values, scoring="f1", cv=5)
+        clf.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, clf.predict(X_test)
+        print "-----Decision Tree with GridSearch----"
+        print clf.best_params_
+        #print clf.coef_
+
+        print classification_report(y_true, y_pred)
         ##################################################
 
         ######### RFE ####################################
-        rfe = RFE(model, 5)
-        rfe = rfe.fit(X_train, Y_train.ravel())
-        y_true, y_pred = Y_test, rfe.predict(X_test)
-        print "-----RFE-----"
-        print classification_report(y_true, y_pred)
+        # rfe = RFE(model, 5)
+        # rfe = rfe.fit(X_train, Y_train.ravel())
+        # y_true, y_pred = Y_test, rfe.predict(X_test)
+        # print "-----RFE-----"
+        # print classification_report(y_true, y_pred)
         ##################################################
 
 

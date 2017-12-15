@@ -18,6 +18,9 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFECV
+from sklearn import feature_selection
+from sklearn.pipeline import Pipeline
 
 warnings.filterwarnings('ignore', category=RuntimeWarning, append=True)
 warnings.filterwarnings('ignore')
@@ -69,19 +72,32 @@ class classifydata(object):
         z = clf.fit(X_train, Y_train.ravel())
         y_true, y_pred = Y_test, clf.predict(X_test)
         print "-----Logistic Regression with GridSearch-----"
-        #print clf.cv_results_ #cv_results_
-        print clf.best_estimator_.coef_
-        #print model.coef_
-        #pdb.set_trace() 
         print classification_report(y_true, y_pred)
         ##################################################
 
         ######### RFE ########################
-        # rfe = RFE(model, 4)
-        # rfe = rfe.fit(X_train, Y_train.ravel())
-        # y_true, y_pred = Y_test, rfe.predict(X_test)
-        # print "-----RFE-----"
-        # print classification_report(y_true, y_pred)
-        ##################################################
+        params = clf.best_params_
+        estimator = linear_model.LogisticRegression(penalty=params['penalty'], C=
+                                                    params['C'], class_weight=params['class_weight'])
 
+
+        rfe = RFE(estimator, n_features_to_select=1, step=1)
+        rfe = rfe.fit(X_train, Y_train.ravel())
+        y_true, y_pred = Y_test, rfe.predict(X_test)
+        features = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']
+        sorted(zip(map(lambda x: round(x, 4), rfe.ranking_), features))
+        feature_selected = dict(zip(rfe.ranking_, features))
+        result = [feature_selected[key] for key in sorted(feature_selected.keys())]
+
+
+        ####feature elimination#####
+
+        for numbers in range(len(result), 0, -1):
+            X_train = self.train_data.as_matrix(result[:numbers])
+            X_test = self.test_data.as_matrix(result[:numbers])
+            estimator.fit(X_train, Y_train)
+            y_true, y_pred = Y_test, estimator.predict(X_test)
+            print "-----Logistic Regression-----"
+            print "features - "  + str(result[:numbers])
+            print classification_report(y_true, y_pred)
 

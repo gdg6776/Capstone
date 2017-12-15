@@ -59,8 +59,8 @@ class task(object):
 
 
 def main():
-    graph = "dev.graphml"
-    graph2 = "test.graphml"
+    graph = sys.argv[1]
+    graph2 = sys.argv[1]
     name = ""
     t = task()
     rd = read(graph)
@@ -81,7 +81,6 @@ def main():
             riskfactor = -1
             X = dataframe.as_matrix(['Node'])
 
-            
             # Split the users into testing and training...
             x_train, x_test = train_test_split(dataframe,test_size=0.3)
 
@@ -100,15 +99,14 @@ def main():
             test_data = mgp.buildegonet()
             test_data = normalize_data(test_data)
 
-            
-            #Normalizing the test data...
+
             print "Performing analysis on Egonet features using Logistic Regression..."
             # Logistic Model
             logistic = classifydata(train_data, test_data.loc[x_test['Node']])
             logistic.classifier()
 
-            # print "Performing analysis on Egonet features using Support Vector Machines..."
-            # # SVM
+            print "Performing analysis on Egonet features using Support Vector Machines..."
+            # SVM
             svmmod = svmMod(train_data, test_data.loc[x_test['Node']])
             svmmod.model()
 
@@ -121,11 +119,6 @@ def main():
             print "Performing analysis on Egonet features using Decision Tree..."
             dt = decisiontreeclassifier(train_data, test_data.loc[x_test['Node']])
             dt.model()
-
-            # # mgp = mainGraphProgram(graphdata, riskfactor, name, graphdata.nodes())
-            # # dataforcov = mgp.buildegonet()
-            # # cov = covariance.empirical_covariance(dataforcov.as_matrix(), assume_centered=False)
-            # # print cov
 
             sys.exit()
 

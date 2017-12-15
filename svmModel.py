@@ -9,8 +9,10 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFECV
 from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
+from sklearn.svm import SVR
 
 class svmMod(object):
     def __init__(self, train_data, test_data):
@@ -54,6 +56,9 @@ class svmMod(object):
         ########## With gridsearch #######################
         scoring = ['accuracy', 'precision', 'recall', 'f1']
         parameters = {'kernel': ('linear', 'rbf'), 'C': [1, 10], 'class_weight':['balanced']}
+
+        # parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]},
+        #  {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
         
         clf = GridSearchCV(model, parameters, scoring="f1",cv=5)
         clf.fit(X_train, Y_train.ravel())
@@ -64,10 +69,24 @@ class svmMod(object):
 
 
         ########## RFE #######################
-        svm = LinearSVC()
-        rfe = RFE(svm, 3)
+        params = clf.best_params_
+        # {'kernel': 'linear', 'C': 10, 'class_weight': 'balanced'}
+        estimator = SVC(kernel=params['kernel'], C=params['C'], class_weight=params['class_weight'])
+        rfe = RFE(estimator, n_features_to_select=1, step=1)
         rfe = rfe.fit(X_train, Y_train.ravel())
         y_true, y_pred = Y_test, rfe.predict(X_test)
-        print "-----RFE-----"
-        print classification_report(y_true, y_pred)
+        features = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']
+        sorted(zip(map(lambda x: round(x, 4), rfe.ranking_), features))
+        feature_selected = dict(zip(rfe.ranking_, features))
+        result = [feature_selected[key] for key in sorted(feature_selected.keys())]
         ####################################################
+
+
+        for numbers in range(len(result), 0, -1):
+            X_train = self.train_data.as_matrix(result[:numbers])
+            X_test = self.test_data.as_matrix(result[:numbers])
+            estimator.fit(X_train, Y_train)
+            y_true, y_pred = Y_test, estimator.predict(X_test)
+            print "-----SVM-----"
+            print "features - " + str(result[:numbers])
+            print classification_report(y_true, y_pred)

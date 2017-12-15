@@ -1,12 +1,8 @@
 import numpy as np
-from sklearn import cross_validation
-from sklearn import metrics
 from sklearn import tree
-from sklearn.metrics import recall_score
-from sklearn.grid_search import GridSearchCV
-import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report
 from sklearn.feature_selection import RFE
+from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import classification_report
 
 
 class decisiontreeclassifier(object):

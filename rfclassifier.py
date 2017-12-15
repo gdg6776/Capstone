@@ -1,9 +1,8 @@
 import numpy as np
-from sklearn import cross_validation
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import RFE
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
-from sklearn.feature_selection import RFE
 
 
 class randomforestclassifier(object):

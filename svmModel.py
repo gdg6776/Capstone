@@ -1,18 +1,9 @@
-import warnings
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import linear_model, cross_validation
-from sklearn import metrics
-
-from sklearn.metrics import recall_score
-from sklearn.grid_search import GridSearchCV
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
 from sklearn.feature_selection import RFE
-from sklearn.feature_selection import RFECV
-from sklearn.svm import LinearSVC
+from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import classification_report
 from sklearn.svm import SVC
-from sklearn.svm import SVR
+
 
 class svmMod(object):
     def __init__(self, train_data, test_data):

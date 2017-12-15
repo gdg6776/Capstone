@@ -1,6 +1,6 @@
 These are the tools for studying how youtube is used to provide and seek support for suicide.
 This project requires Python 2.7 and some data science libraries.
-We have separate scripts for Development and testing
+We have separate scripts for Development and testing.
 
 
 To start the program simply run the schell script job.sh using following command -

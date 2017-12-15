@@ -3,24 +3,11 @@ References -  http://librimind.com/2015/07/logistic-regression-with-python/
 """
 import warnings
 
-import matplotlib.pyplot as plt
-import pdb
 import numpy as np
-from sklearn import linear_model, cross_validation
-from sklearn import svm
-from sklearn import metrics
-from sklearn.metrics import recall_score
-from sklearn.grid_search import GridSearchCV
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import f1_score
-from sklearn.metrics import make_scorer
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
-from sklearn import preprocessing
+from sklearn import linear_model
 from sklearn.feature_selection import RFE
-from sklearn.feature_selection import RFECV
-from sklearn import feature_selection
-from sklearn.pipeline import Pipeline
+from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import classification_report
 
 warnings.filterwarnings('ignore', category=RuntimeWarning, append=True)
 warnings.filterwarnings('ignore')

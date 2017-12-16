@@ -15,6 +15,7 @@ class ego(object):
         triangles = {}
         coefficient = {}
         egonetSize = {}
+        avgshortestpath = {}
 
         cc = list()
         tri = list()
@@ -22,28 +23,28 @@ class ego(object):
         egoSize = list()
         hasrisk = list()
         corenumberlist = list()
-
+        avgpathlist = list()
 
         for node in self.data:
             if self.graphname.node[node]["hasrisk"] == self.riskfactor:
                 ego_graph = nx.ego_graph(self.graphname, node)
                 self.computeegofeatures(corenumber, connectedcomponents, triangles, coefficient,
-                                        egonetSize,cc, tri, coeff, egoSize, hasrisk,
-                                        corenumberlist, ego_graph, node)
+                                        egonetSize,avgshortestpath,cc, tri, coeff, egoSize, hasrisk,
+                                        corenumberlist, avgpathlist,ego_graph, node)
             elif self.riskfactor == -1:
                 ego_graph = nx.ego_graph(self.graphname, node)
                 self.computeegofeatures(corenumber, connectedcomponents, triangles, coefficient,
-                                        egonetSize,cc, tri, coeff, egoSize, hasrisk,
-                                        corenumberlist, ego_graph, node)
+                                        egonetSize,avgshortestpath, cc, tri, coeff, egoSize, hasrisk,
+                                        corenumberlist, avgpathlist,ego_graph, node)
 
         if self.riskfactor == -1:
             frame = dataf.dataframe()
-            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist, self.data)
+            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist,avgpathlist, self.data)
         else:
             return connectedcomponents, triangles, coefficient, egonetSize, corenumber
 
-    def computeegofeatures(self, corenumber, connectedcomponents, triangles, coefficient, egonetSize,
-                           cc, tri, coeff, egoSize, hasrisk, corenumberlist, ego_graph, node):
+    def computeegofeatures(self, corenumber, connectedcomponents, triangles, coefficient, egonetSize,avgshortestpath,
+                           cc, tri, coeff, egoSize, hasrisk, corenumberlist, avgpathlist,ego_graph, node):
         hasrisk.append(self.graphname.node[node]["hasrisk"])
 
         # Core number
@@ -63,6 +64,13 @@ class ego(object):
         coeff_temp = nx.average_clustering(ego_graph)
         coefficient[node] = coeff_temp  # adding the count for that node in dictionary
         coeff.append(coeff_temp)
+
+
+        #Shortest path
+        length = nx.average_shortest_path_length(ego_graph)
+        avgshortestpath[node] = length
+        avgpathlist.append(length)
+
 
         # Connected components minus ego
         ego_graph.remove_node(node)

@@ -15,7 +15,8 @@ from svmModel import svmMod
 # CMH
 # Not sure about the best place for this yet, so dumping it here
 def normalize_data(data):
-        for feature in ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']:
+        for feature in ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber',
+                        'avgshortestpath']:
             data[feature] = rankdata(data[feature])/float(len(data))
         #data["riskfactor"] = 1 - data["riskfactor"]
         return data
@@ -61,8 +62,8 @@ class task(object):
 
 
 def main():
-    graph = sys.argv[1]
-    graph2 = sys.argv[1]
+    graph = "dev.graphml" #sys.argv[1]
+    graph2 = "test.graphml" #sys.argv[1]
     name = ""
     t = task()
     rd = read(graph)
@@ -70,15 +71,17 @@ def main():
 
     for value in range(0, 3):
         if value == 1:
-            print "Performing analysis on users who are atRisk..."
-            riskfactor = "1"
-            name = "atrisk"
-            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            # print "Performing analysis on users who are atRisk..."
+            # riskfactor = "1"
+            # name = "atrisk"
+            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            pass
         elif value == 0:
-            print "Performing analysis on users who are Not atRisk..."
-            riskfactor = "0"
-            name = "notatrisk"
-            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            # print "Performing analysis on users who are Not atRisk..."
+            # riskfactor = "0"
+            # name = "notatrisk"
+            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
+            pass
         else:
             riskfactor = -1
             X = dataframe.as_matrix(['Node'])
@@ -92,21 +95,21 @@ def main():
             #Compute graph features and create training data -  graph restricted to training users
             mgp = mainGraphProgram(subG, riskfactor, name, x_train['Node'].ravel())
             train_data = mgp.buildegonet()
-           
-            train_data = normalize_data(train_data)
 
-            #pdb.set_trace()
+            train_data = normalize_data(train_data)
+            #
+            # #pdb.set_trace()
             #Compute graph features and create testing data- graph restricted just to training + test (or dev) users only
             mgp = mainGraphProgram(graphdata, riskfactor, name, dataframe['Node'].ravel())
             test_data = mgp.buildegonet()
             test_data = normalize_data(test_data)
-
-
+            #
+            #
             print "Performing analysis on Egonet features using Logistic Regression..."
             # Logistic Model
             logistic = classifydata(train_data, test_data.loc[x_test['Node']])
             logistic.classifier()
-
+            #
             print "Performing analysis on Egonet features using Support Vector Machines..."
             # SVM
             svmmod = svmMod(train_data, test_data.loc[x_test['Node']])

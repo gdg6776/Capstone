@@ -11,7 +11,7 @@ class svmMod(object):
         self.test_data = test_data
 
     def model(self):
-        columns = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']
+        columns = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber', 'avgshortestpath']
         classfier_column = ['riskfactor']
 
         X_train = self.train_data.as_matrix(columns)
@@ -66,7 +66,7 @@ class svmMod(object):
         rfe = RFE(estimator, n_features_to_select=1, step=1)
         rfe = rfe.fit(X_train, Y_train.ravel())
         y_true, y_pred = Y_test, rfe.predict(X_test)
-        features = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber']
+        features = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'corenumber', 'avgshortestpath']
         sorted(zip(map(lambda x: round(x, 4), rfe.ranking_), features))
         feature_selected = dict(zip(rfe.ranking_, features))
         result = [feature_selected[key] for key in sorted(feature_selected.keys())]

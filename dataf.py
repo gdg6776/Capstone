@@ -6,7 +6,7 @@ class dataframe(object):
     def __init__(self):
         pass
 
-    def createDataFrame(self, cc, tri, coeff, egoSize, hasrisk, corenumberlist,avgpathlist, nodesList):
+    def createDataFrame(self, cc, tri, coeff, egoSize, hasrisk, corenumberlist,avgpathlist,nodesList):
         attributes = ['connectedComponents', 'triangles', 'coefficient', 'egonetSize', 'riskfactor', 'corenumber',
                       'avgshortestpath']
 

@@ -62,8 +62,7 @@ class task(object):
 
 
 def main():
-    graph = "dev.graphml" #sys.argv[1]
-    graph2 = "test.graphml" #sys.argv[1]
+    graph =  sys.argv[1] #"dev.graphml"
     name = ""
     t = task()
     rd = read(graph)
@@ -71,17 +70,15 @@ def main():
 
     for value in range(0, 3):
         if value == 1:
-            # print "Performing analysis on users who are atRisk..."
-            # riskfactor = "1"
-            # name = "atrisk"
-            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
-            pass
+            print "Performing analysis on users who are atRisk..."
+            riskfactor = "1"
+            name = "atrisk"
+            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         elif value == 0:
-            # print "Performing analysis on users who are Not atRisk..."
-            # riskfactor = "0"
-            # name = "notatrisk"
-            # t.performtask(graphdata, riskfactor, name, graphdata.nodes())
-            pass
+            print "Performing analysis on users who are Not atRisk..."
+            riskfactor = "0"
+            name = "notatrisk"
+            t.performtask(graphdata, riskfactor, name, graphdata.nodes())
         else:
             riskfactor = -1
             X = dataframe.as_matrix(['Node'])
@@ -109,7 +106,7 @@ def main():
             # Logistic Model
             logistic = classifydata(train_data, test_data.loc[x_test['Node']])
             logistic.classifier()
-            #
+
             print "Performing analysis on Egonet features using Support Vector Machines..."
             # SVM
             svmmod = svmMod(train_data, test_data.loc[x_test['Node']])

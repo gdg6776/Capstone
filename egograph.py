@@ -24,6 +24,7 @@ class ego(object):
         hasrisk = list()
         corenumberlist = list()
         avgpathlist = list()
+        avgdegreelist = list()
 
         for node in self.data:
             if self.graphname.node[node]["hasrisk"] == self.riskfactor:
@@ -35,16 +36,16 @@ class ego(object):
                 ego_graph = nx.ego_graph(self.graphname, node)
                 self.computeegofeatures(corenumber, connectedcomponents, triangles, coefficient,
                                         egonetSize,avgshortestpath, cc, tri, coeff, egoSize, hasrisk,
-                                        corenumberlist, avgpathlist,ego_graph, node)
+                                        corenumberlist,avgpathlist,ego_graph, node)
 
         if self.riskfactor == -1:
             frame = dataf.dataframe()
-            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist,avgpathlist, self.data)
+            return frame.createDataFrame(cc, tri, coeff, egoSize, hasrisk, corenumberlist, avgpathlist,self.data)
         else:
             return connectedcomponents, triangles, coefficient, egonetSize, corenumber
 
     def computeegofeatures(self, corenumber, connectedcomponents, triangles, coefficient, egonetSize,avgshortestpath,
-                           cc, tri, coeff, egoSize, hasrisk, corenumberlist, avgpathlist,ego_graph, node):
+                           cc, tri, coeff, egoSize, hasrisk, corenumberlist, avgpathlist, ego_graph, node):
         hasrisk.append(self.graphname.node[node]["hasrisk"])
 
         # Core number
@@ -70,6 +71,11 @@ class ego(object):
         length = nx.average_shortest_path_length(ego_graph)
         avgshortestpath[node] = length
         avgpathlist.append(length)
+
+        # #Degree of graph
+        # degree = dict(ego_graph.degree())
+        # temp = reduce(lambda x, y: x + y, degree.values()) / len(degree.values())
+        # avgdegreelist.append(temp)
 
 
         # Connected components minus ego
